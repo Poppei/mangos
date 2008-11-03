@@ -3442,7 +3442,7 @@ void Player::DeleteFromDB(uint64 playerguid, uint32 accountId, bool updateRealmC
 
     // remove signs from petitions (also remove petitions if owner);
     RemovePetitionsAndSigns(playerguid, 10);
-
+/*
     // return back all mails with COD and Item                 0  1              2      3       4          5     6
     QueryResult *resultMail = CharacterDatabase.PQuery("SELECT id,mailTemplateId,sender,subject,itemTextId,money,has_items FROM mail WHERE receiver='%u' AND has_items<>0 AND cod<>0", guid);
     if(resultMail)
@@ -3548,7 +3548,13 @@ void Player::DeleteFromDB(uint64 playerguid, uint32 accountId, bool updateRealmC
     CharacterDatabase.PExecute("DELETE FROM character_pet WHERE owner = '%u'",guid);
     CharacterDatabase.PExecute("DELETE FROM character_pet_declinedname WHERE owner = '%u'",guid);
     CharacterDatabase.CommitTransaction();
-
+*/
+	
+	// don't delete the chars finally, just set the flag so the chars can be restored
+    QueryResult *resultChar = CharacterDatabase.PQuery("SELECT name FROM characters WHERE guid = '%u'",guid);
+	Field *fields = resultChar->Fetch();
+	CharacterDatabase.PExecute("UPDATE characters SET name='', account=0, deleteInfos='%s|%u', deleteDate=NOW() WHERE guid='%u'",fields[0].GetString(),accountId,guid);
+	
     //loginDatabase.PExecute("UPDATE realmcharacters SET numchars = numchars - 1 WHERE acctid = %d AND realmid = %d", accountId, realmID);
     if(updateRealmChars) sWorld.UpdateRealmCharCount(accountId);
 }
