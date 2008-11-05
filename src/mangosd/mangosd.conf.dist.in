@@ -1079,3 +1079,20 @@ Ra.IP = 0.0.0.0
 Ra.Port = 3443
 Ra.MinLevel = 3
 Ra.Secure = 1
+
+
+#    CharDeletion.Mode
+#        Character Deletion Behavior
+#        Default: 0  - Full deletion without restoration point
+#                 1  - Delinking, char gets delinked from the account, name gets freed up and appears as deleted ingame
+#                 2  - Deletion with pdump of the character
+#    CharDeletion.MinLevel
+#        Character gets deleted by CharDeletion.Mode=0 when the character hasn't the specified level yet.
+#        Default: 0  - For every character the specified mode will be used
+#                 1+ - Only for players which have reached the specified level get deleted by the specified mode.
+#                      the rest will be deleted by CharDeletion.Mode=0
+#
+####################################################################################################################
+
+CharDeletion.Mode = 0
+CharDeletion.MinLevel = 0
