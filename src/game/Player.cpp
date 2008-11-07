@@ -3449,10 +3449,10 @@ void Player::DeleteFromDB(uint64 playerguid, uint32 accountId, bool updateRealmC
 	int charDelete_mode = sConfig.GetIntDefault("CharDeletion.Mode",0);
 	int charDelete_minLvl = sConfig.GetIntDefault("CharDeletion.MinLevel",0);
 	
-	// error in objmgr.GetPlayer(playerguid)->getLevel()
-	// needed to find other way to get the player level
-	//if(charDelete_mode == 0 || objmgr.GetPlayer(playerguid)->getLevel() < charDelete_minLvl) {
-	if(charDelete_mode == 0) {
+	// either the player is under the min. level or the chardelete_mode is 0 (normal delete)
+	Tokens data;
+	Player::LoadValuesArrayFromDB(data,playerguid);
+	if(charDelete_mode == 0 || Player::GetUInt32ValueFromArray(data, UNIT_FIELD_LEVEL) < charDelete_minLvl) {
 		// return back all mails with COD and Item                 0  1              2      3       4          5     6
 		QueryResult *resultMail = CharacterDatabase.PQuery("SELECT id,mailTemplateId,sender,subject,itemTextId,money,has_items FROM mail WHERE receiver='%u' AND has_items<>0 AND cod<>0", guid);
 		if(resultMail)
